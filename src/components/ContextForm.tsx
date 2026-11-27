@@ -9,6 +9,8 @@ interface ContextFormProps {
   isLoading: boolean;
 }
 
+const PRESET_CITIES = ['New Delhi', 'Kolkata', 'Howrah', 'Mumbai', 'Bengaluru'];
+
 export const ContextForm: React.FC<ContextFormProps> = ({
   profile,
   onChange,
@@ -19,21 +21,43 @@ export const ContextForm: React.FC<ContextFormProps> = ({
     <form
       onSubmit={onAnalyze}
       aria-label="Household and Location Air Quality Profile"
-      className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5"
+      className="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-xl space-y-5"
     >
-      <div className="border-b border-slate-100 pb-3">
-        <h2 className="text-lg font-bold text-slate-900">1. Customize Your Household Context</h2>
-        <p className="text-sm text-slate-600">
-          Tailors winter smog routines, indoor air hacks, and emission trade-offs to your family.
-        </p>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3.5">
+        <div>
+          <h2 className="text-base font-bold text-white">1. Configure Location & Household Context</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Personalizes winter thermal-inversion routines, indoor hacks, and emission trade-offs.
+          </p>
+        </div>
+
+        {/* Quick-Select City Pills */}
+        <div className="flex flex-wrap items-center gap-1.5" aria-label="Quick city presets">
+          {PRESET_CITIES.map((cityName) => {
+            const active = profile.city.toLowerCase() === cityName.toLowerCase();
+            return (
+              <button
+                key={cityName}
+                type="button"
+                onClick={() => onChange({ ...profile, city: cityName, simulatedSmogAqi: null })}
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
+                  active
+                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 font-bold'
+                    : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-white'
+                }`}
+              >
+                {cityName}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* City Input */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
-          <label htmlFor="city-input" className="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-1.5">
-            <MapPin className="w-4 h-4 text-sky-600" aria-hidden="true" />
-            City or Urban Locality
+          <label htmlFor="city-input" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 mb-1.5">
+            <MapPin className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+            City / Locality
           </label>
           <input
             id="city-input"
@@ -41,59 +65,56 @@ export const ContextForm: React.FC<ContextFormProps> = ({
             required
             value={profile.city}
             onChange={(e) => onChange({ ...profile, city: e.target.value })}
-            placeholder="e.g., New Delhi, Kolkata, Howrah, Mumbai"
-            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
+            placeholder="e.g., Howrah, Kolkata, Delhi"
+            className="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20"
           />
         </div>
 
-        {/* Household Vulnerability */}
         <div>
-          <label htmlFor="sensitivity-select" className="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-1.5">
-            <Users className="w-4 h-4 text-sky-600" aria-hidden="true" />
-            Household Health Sensitivity
+          <label htmlFor="sensitivity-select" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 mb-1.5">
+            <Users className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+            Health Profile
           </label>
           <select
             id="sensitivity-select"
             value={profile.sensitivity}
             onChange={(e) => onChange({ ...profile, sensitivity: e.target.value as SensitivityGroup })}
-            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 bg-white focus:border-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
+            className="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20"
           >
             <option value="general">General Adult Household</option>
             <option value="children">Young Children / School Kids</option>
             <option value="elderly">Senior Citizens (60+)</option>
-            <option value="asthma_respiratory">Asthma / Respiratory Sensitivity</option>
+            <option value="asthma_respiratory">Asthma / Respiratory Risk</option>
           </select>
         </div>
 
-        {/* Housing Type */}
         <div>
-          <label htmlFor="housing-select" className="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-1.5">
-            <Home className="w-4 h-4 text-sky-600" aria-hidden="true" />
-            Home & Ventilation Setup
+          <label htmlFor="housing-select" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 mb-1.5">
+            <Home className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+            Home Architecture
           </label>
           <select
             id="housing-select"
             value={profile.housing}
             onChange={(e) => onChange({ ...profile, housing: e.target.value as HousingType })}
-            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 bg-white focus:border-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
+            className="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20"
           >
-            <option value="apartment_high">High-Rise Apartment (Balcony)</option>
+            <option value="apartment_high">High-Rise Apartment</option>
             <option value="ground_floor_roadside">Ground Floor Near Main Road</option>
             <option value="independent_house">Independent House / Courtyard</option>
           </select>
         </div>
 
-        {/* Daily Commute */}
         <div>
-          <label htmlFor="commute-select" className="flex items-center gap-1.5 text-sm font-semibold text-slate-800 mb-1.5">
-            <Car className="w-4 h-4 text-sky-600" aria-hidden="true" />
-            Primary Daily Commute
+          <label htmlFor="commute-select" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 mb-1.5">
+            <Car className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+            Daily Commute
           </label>
           <select
             id="commute-select"
             value={profile.commute}
             onChange={(e) => onChange({ ...profile, commute: e.target.value as CommuteMode })}
-            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 bg-white focus:border-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-600/20"
+            className="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20"
           >
             <option value="car_bike">Personal Car / Two-Wheeler</option>
             <option value="public_transit">Metro / Bus / Shared Auto</option>
@@ -103,12 +124,12 @@ export const ContextForm: React.FC<ContextFormProps> = ({
         </div>
       </div>
 
-      {/* Winter Smog Stress-Test Simulator */}
-      <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <label htmlFor="smog-simulator" className="flex items-center gap-2 text-sm font-semibold text-amber-950">
-            <Flame className="w-4 h-4 text-amber-600" aria-hidden="true" />
-            Winter Smog Scenario Mode:
+      {/* Smog Stress-Test Bar + Submit */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-950/80 border border-slate-800 rounded-xl p-3.5">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <label htmlFor="smog-simulator" className="flex items-center gap-1.5 text-xs font-semibold text-amber-400">
+            <Flame className="w-4 h-4" aria-hidden="true" />
+            Telemetry Mode:
           </label>
           <select
             id="smog-simulator"
@@ -119,26 +140,23 @@ export const ContextForm: React.FC<ContextFormProps> = ({
                 simulatedSmogAqi: e.target.value === 'live' ? null : Number(e.target.value),
               })
             }
-            className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="rounded-lg bg-slate-900 border border-slate-700 px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-400"
           >
-            <option value="live">Live Real-Time City AQI (Open-Meteo)</option>
-            <option value="240">Simulate: Poor Winter Haze (AQI 240)</option>
-            <option value="385">Simulate: Severe Winter Smog Episode (AQI 385)</option>
+            <option value="live">Live Satellite/Station AQI</option>
+            <option value="245">Simulate: Poor Winter Haze (AQI 245)</option>
+            <option value="390">Simulate: Severe Smog Emergency (AQI 390)</option>
           </select>
         </div>
-        <p className="text-xs text-amber-900 mt-1.5">
-          Switch between live satellite/station readings and severe winter thermal-inversion episodes to see how recommendations adapt.
-        </p>
-      </div>
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full flex items-center justify-center gap-2 rounded-xl bg-sky-700 hover:bg-sky-800 disabled:bg-slate-400 text-white font-semibold py-3 px-5 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-600/30"
-      >
-        <Sparkles className="w-4 h-4" aria-hidden="true" />
-        {isLoading ? 'Generating Personalized Smog Plan...' : 'Generate GenAI Air Quality Plan'}
-      </button>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 hover:from-cyan-400 hover:to-sky-500 disabled:opacity-50 text-slate-950 font-bold text-sm py-2.5 px-6 transition-all shadow-lg shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        >
+          <Sparkles className="w-4 h-4" aria-hidden="true" />
+          {isLoading ? 'Synthesizing Plan...' : 'Run GenAI Analysis'}
+        </button>
+      </div>
     </form>
   );
 };

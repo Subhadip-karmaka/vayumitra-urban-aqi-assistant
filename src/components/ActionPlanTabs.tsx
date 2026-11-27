@@ -35,24 +35,22 @@ export const ActionPlanTabs: React.FC<ActionPlanTabsProps> = ({ plan }) => {
   const currentTab = tabs.find((t) => t.key === activeTab)!;
 
   return (
-    <section aria-label="GenAI Winter Smog Action Recommendations" className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-        <div>
-          <h2 className="text-lg font-bold text-slate-900">2. Tailored GenAI Smog Strategy</h2>
-          <p className="text-sm text-slate-600 mt-0.5">{plan.smogSummary}</p>
+    <section
+      aria-label="GenAI Winter Smog Action Recommendations"
+      className="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-xl space-y-5"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-800 pb-4">
+        <div className="max-w-3xl">
+          <h2 className="text-lg font-bold text-white">2. GenAI Tailored Smog Defense Strategy</h2>
+          <p className="text-sm text-slate-300 mt-1 leading-relaxed">{plan.smogSummary}</p>
         </div>
-        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-sky-100 text-sky-900">
-          Powered by {plan.generatedBy}
+        <span className="text-xs font-mono font-semibold px-3 py-1 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-800">
+          {plan.generatedBy}
         </span>
       </div>
 
-      {/* Thermal Inversion Banner */}
-      <div role="status" className="rounded-xl bg-indigo-50 border border-indigo-200 p-3.5 text-sm text-indigo-950 font-medium">
-        {plan.inversionAlert}
-      </div>
-
-      {/* Accessible Tab Buttons */}
-      <div role="tablist" aria-label="Action Categories" className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+      {/* Category Tabs */}
+      <div role="tablist" aria-label="Action Categories" className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
         {tabs.map((tab) => {
           const isSelected = tab.key === activeTab;
           return (
@@ -61,10 +59,10 @@ export const ActionPlanTabs: React.FC<ActionPlanTabsProps> = ({ plan }) => {
               role="tab"
               aria-selected={isSelected}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-sky-600 ${
+              className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wide transition-all focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
                 isSelected
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20'
+                  : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-white'
               }`}
             >
               {tab.icon}
@@ -74,37 +72,36 @@ export const ActionPlanTabs: React.FC<ActionPlanTabsProps> = ({ plan }) => {
         })}
       </div>
 
-      {/* Recommendation Cards with Quantified Direct Impact */}
+      {/* Cards */}
       <div role="tabpanel" className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {currentTab.items.map((item, idx) => (
           <article
             key={idx}
-            className="rounded-xl border border-slate-200 bg-slate-50/70 p-5 flex flex-col justify-between space-y-4"
+            className="rounded-xl bg-slate-950 border border-slate-800 p-5 flex flex-col justify-between space-y-4 hover:border-slate-700 transition-colors"
           >
             <div className="space-y-2">
               <div className="flex items-start justify-between gap-2">
-                <h3 className="font-bold text-slate-900 text-base">{item.title}</h3>
-                <span className="shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700">
+                <h3 className="font-bold text-white text-base">{item.title}</h3>
+                <span className="shrink-0 text-[11px] font-mono px-2.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300">
                   Effort: {item.effortLevel}
                 </span>
               </div>
-              <div className="text-xs font-semibold text-sky-700">{item.timingOrFrequency}</div>
-              <p className="text-sm text-slate-700 leading-relaxed">{item.description}</p>
+              <div className="text-xs font-mono text-cyan-400">{item.timingOrFrequency}</div>
+              <p className="text-sm text-slate-300 leading-relaxed">{item.description}</p>
             </div>
 
-            {/* Direct Impact Breakdown */}
-            <div className="space-y-2 pt-3 border-t border-slate-200/80 text-xs">
-              <div className="flex items-start gap-2 text-emerald-900 bg-emerald-50 border border-emerald-200 rounded-lg p-2.5">
-                <HeartPulse className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" aria-hidden="true" />
+            <div className="space-y-2 pt-3 border-t border-slate-800 text-xs">
+              <div className="flex items-start gap-2 text-emerald-300 bg-emerald-950/40 border border-emerald-900/60 rounded-lg p-2.5">
+                <HeartPulse className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
-                  <span className="font-bold">Direct Health Impact: </span>
+                  <span className="font-bold text-emerald-200">Direct Health Impact: </span>
                   {item.directHealthImpact}
                 </div>
               </div>
-              <div className="flex items-start gap-2 text-teal-900 bg-teal-50 border border-teal-200 rounded-lg p-2.5">
-                <Sprout className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" aria-hidden="true" />
+              <div className="flex items-start gap-2 text-cyan-300 bg-cyan-950/40 border border-cyan-900/60 rounded-lg p-2.5">
+                <Sprout className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
-                  <span className="font-bold">Emissions Saved: </span>
+                  <span className="font-bold text-cyan-200">Emissions Saved: </span>
                   {item.emissionReduction}
                 </div>
               </div>
@@ -114,10 +111,10 @@ export const ActionPlanTabs: React.FC<ActionPlanTabsProps> = ({ plan }) => {
       </div>
 
       {/* Community Multiplier */}
-      <div className="rounded-xl bg-emerald-950 text-emerald-50 p-4 flex items-start gap-3">
-        <Users className="w-5 h-5 text-emerald-300 shrink-0 mt-0.5" aria-hidden="true" />
-        <div className="text-sm">
-          <span className="font-bold text-emerald-200">Community Smog Action: </span>
+      <div className="rounded-xl bg-gradient-to-r from-emerald-950/80 to-slate-950 border border-emerald-800/60 p-4 flex items-start gap-3">
+        <Users className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
+        <div className="text-sm text-slate-200">
+          <span className="font-bold text-emerald-300">Neighborhood Multiplier: </span>
           {plan.communityAction}
         </div>
       </div>
