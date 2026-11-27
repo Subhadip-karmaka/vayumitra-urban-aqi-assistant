@@ -36,3 +36,5 @@ flowchart TD
     G -->|Zero-Key / Fallback| I[⚙️ Context-Aware Hybrid Engine<br/>Deterministic Multi-Factor Rules]
     H --> J[🖥️ Interactive Telemetry Dashboard<br/>24h Curve • Action Tabs • Impact Tracker]
     I --> J
+
+Created By ~SUBHADIP KARMAKAR👑
