@@ -38,9 +38,33 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    runAnalysis(profile);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  let isCancelled = false;
+
+  const initializeTelemetry = async () => {
+    try {
+      const liveMetrics = await fetchCityAirQuality(
+        profile.city,
+        profile.simulatedSmogAqi
+      );
+      const initialPlan = await generateAirQualityPlan(profile, liveMetrics);
+      if (!isCancelled) {
+        setMetrics(liveMetrics);
+        setPlan(initialPlan);
+        setIsLoading(false);
+      }
+    } catch {
+      if (!isCancelled) {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  void initializeTelemetry();
+  return () => {
+    isCancelled = true;
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
   const handleAnalyzeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
